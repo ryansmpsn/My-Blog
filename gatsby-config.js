@@ -6,7 +6,7 @@
 
 module.exports = {
   siteMetadata: {
-    title: "Full-Stack Project",
+    title: "Ryan's Blog",
     author: "Ryan Simpson",
   },
   /* Your site config here */
