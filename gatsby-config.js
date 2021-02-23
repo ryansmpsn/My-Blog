@@ -12,6 +12,7 @@ module.exports = {
   /* Your site config here */
   plugins: [
     "gatsby-plugin-react-helmet",
+    "gatsby-plugin-material-ui",
     {
       resolve: "gatsby-source-contentful",
       options: {

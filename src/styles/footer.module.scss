@@ -1,3 +1,10 @@
 .footer {
+  padding: 0%;
   margin-top: 3rem;
+  text-align: center;
+  border-top: 1px solid black;
+  p {
+    font-size: small;
+    margin: 3px 0;
+  }
 }
