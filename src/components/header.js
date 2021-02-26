@@ -1,9 +1,22 @@
-import React from "react"
+import React, { useState } from "react"
 import { Link, graphql, useStaticQuery } from "gatsby"
 import headerStyles from "../styles/header.module.scss"
-import { AppBar, Toolbar, Typography, Button } from "@material-ui/core"
-
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Box,
+  List,
+  Container,
+  useMediaQuery,
+  useTheme,
+  SwipeableDrawer,
+  ListItemIcon,
+} from "@material-ui/core"
+import MenuIcon from "@material-ui/icons/Menu"
 const Header = () => {
+  const [drawerStatus, setDrawerStatus] = useState(false)
   // Tagged template litteral
   const data = useStaticQuery(graphql`
     query {
@@ -15,58 +28,65 @@ const Header = () => {
       }
     }
   `)
+  let navLinks = [
+    { title: "Home", path: "/" },
+    { title: "Blog", path: "/blog" },
+    { title: "About", path: "/about" },
+    { title: "Contact", path: "/contact" },
+  ]
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down("xs"))
 
   return (
     <header className={headerStyles.header}>
-      <h1>
-        <Link to="/" className={headerStyles.title}>
-          {data.site.siteMetadata.title}
-        </Link>
-      </h1>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6">News</Typography>
-          <Button color="inherit">Login</Button>
-        </Toolbar>
-        <ul className={headerStyles.navList}>
-          <li>
-            <Link
-              className={headerStyles.navItem}
-              activeClassName={headerStyles.activeNavItem}
-              to="/"
-            >
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link
-              className={headerStyles.navItem}
-              activeClassName={headerStyles.activeNavItem}
-              to="/blog"
-            >
-              Blog
-            </Link>
-          </li>
-          <li>
-            <Link
-              className={headerStyles.navItem}
-              activeClassName={headerStyles.activeNavItem}
-              to="/about"
-            >
-              About
-            </Link>
-          </li>
-          <li>
-            <Link
-              className={headerStyles.navItem}
-              activeClassName={headerStyles.activeNavItem}
-              to="/contact"
-            >
-              Contact
-            </Link>
-          </li>
-        </ul>
-      </AppBar>
+      {isMobile ? (
+        <>
+          <AppBar color="transparent">
+            <Toolbar className={headerStyles.navbarFlex}>
+              <Typography variant="h6" className={headerStyles.title}>
+                {data.site.siteMetadata.title}
+              </Typography>
+              <Button onClick={() => setDrawerStatus(true)} className="float">
+                <ListItemIcon>
+                  <MenuIcon />
+                </ListItemIcon>
+              </Button>
+            </Toolbar>
+          </AppBar>
+          <SwipeableDrawer
+            anchor={"right"}
+            open={drawerStatus}
+            onClose={() => setDrawerStatus(false)}
+            onOpen={() => setDrawerStatus(true)}
+          >
+            some items
+          </SwipeableDrawer>
+        </>
+      ) : (
+        <AppBar
+          position="static"
+          color="transparent"
+          className={headerStyles.navbarContainer}
+        >
+          <Toolbar className={headerStyles.navbarFlex}>
+            <Typography variant="h6" className={headerStyles.title}>
+              {data.site.siteMetadata.title}
+            </Typography>
+            <List component="nav" aria-labelledby="main navigation">
+              {navLinks.map(({ title, path }, index) => (
+                <Link
+                  key={index}
+                  className={headerStyles.navItem}
+                  activeClassName={headerStyles.activeNavItem}
+                  to={path}
+                >
+                  {title}
+                </Link>
+              ))}
+            </List>
+          </Toolbar>
+        </AppBar>
+      )}
     </header>
   )
 }
